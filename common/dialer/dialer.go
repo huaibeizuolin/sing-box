@@ -16,6 +16,9 @@ func New(router adapter.Router, options option.DialerOptions) N.Dialer {
 	} else {
 		dialer = NewDetour(router, options.Detour)
 	}
+	if options.DetourRedirectable {
+		dialer = NewRedirectable(dialer)
+	}
 	domainStrategy := dns.DomainStrategy(options.DomainStrategy)
 	if domainStrategy != dns.DomainStrategyAsIS || options.Detour == "" {
 		dialer = NewResolveDialer(router, dialer, domainStrategy, time.Duration(options.FallbackDelay))
